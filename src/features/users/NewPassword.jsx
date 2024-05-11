@@ -31,7 +31,7 @@ const NewPassword = () => {
         }
     }, [loading, error, message])
   return (
-    <>
+    <div className="container container-fluid">
         <MetaData title={'forgot password'}/>
         <div className="row wrapper">
                 <div className="col-10 col-lg-5">
@@ -71,7 +71,7 @@ const NewPassword = () => {
                     </form>
                 </div>
             </div>
-    </>
+    </div>
   )
 }
 

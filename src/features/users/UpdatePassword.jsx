@@ -29,7 +29,7 @@ const UpdatePassword = () => {
         }
     }, [isUpdated, error]);
   return (
-    <>
+    <div className="container container-fluid">
         <MetaData title={"Update Password"} />
         <div className="row wrapper">
         <div className="col-10 col-lg-5">
@@ -71,7 +71,7 @@ const UpdatePassword = () => {
         </div>
       </div>
 
-    </>
+    </div>
   )
 }
 

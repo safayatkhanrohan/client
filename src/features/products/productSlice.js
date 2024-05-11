@@ -16,16 +16,38 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ({
     }
 });
 
+export const deleteProduct = createAsyncThunk('products/deleteProduct', async (id) => {
+    try {
+        await axios.delete(`/admin/product/${id}`);
+    } catch (error) {
+        error.response.data.message;
+    }
+});
+
+export const getAdminProducts = createAsyncThunk('products/getAdminProducts', async () => {
+    try {
+        const {products} = await axios.get('/admin/products').then( r => r.data);
+        return products;
+    } catch (error) {
+        throw Error(error.response.data.message);
+    }
+});
+
 export const productSlice = createSlice({
     name: 'products',
     initialState: {
         loading: false,
+        allProducts: [],
         products: [],
-        error: null
+        error: null,
+        message: null
     },
     reducers: {
         clearError: (state) => {
             state.error = null;
+        },
+        clearMessage: (state) => {
+            state.message = null;
         }
     },
     extraReducers: (builder) => {
@@ -40,8 +62,30 @@ export const productSlice = createSlice({
             state.loading = false;
             state.error = action.error.message;
         });
+        builder.addCase(getAdminProducts.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(getAdminProducts.fulfilled, (state, action) => {
+            state.loading = false;
+            state.allProducts = action.payload;
+        });
+        builder.addCase(getAdminProducts.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        builder.addCase(deleteProduct.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(deleteProduct.fulfilled, (state) => {
+            state.loading = false;
+            state.message = 'Product deleted successfully';
+        });
+        builder.addCase(deleteProduct.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
     }
 });
-export const { clearError } = productSlice.actions;
+export const { clearError, clearMessage } = productSlice.actions;
 
 export default productSlice.reducer;

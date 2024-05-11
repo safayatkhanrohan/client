@@ -27,7 +27,7 @@ const ConfirmOrder = () => {
         navigate('/payment');
     }
     return (
-        <>
+        <div className="container container-fluid">
             <MetaData title={'Confirm Order'} />
             <CheckoutSteps shipping confirmOrder />
             <div className="row d-flex justify-content-between">
@@ -72,7 +72,7 @@ const ConfirmOrder = () => {
                 </div>
             </div>
         </div>
-        </>
+        </div>
     );
 }
 

@@ -23,6 +23,7 @@ export const loadUser = createAsyncThunk('user/loadUser', async () => {
     try {
         const response = await axios.get('/me');
         return response.data;
+        
     } catch (error) {
         throw Error(error.response.data.message);
     }
@@ -73,15 +74,34 @@ export const resetPassword = createAsyncThunk('user/resetPassword', async ({toke
     }
 });
 
+
+export const updateUserAdmin = createAsyncThunk('user/updateUserAdmin', async ({updateOptions, userId}) => {
+    console.log(updateOptions, userId);
+    try {
+        await axios.put(`/admin/user/${userId}`, updateOptions);
+    } catch (error) {
+        throw Error(error.response.data.message);
+    }
+});
+
+export const deleteUser = createAsyncThunk('user/deleteUser', async (userId) => {
+    try {
+        await axios.delete(`/admin/user/${userId}`);
+    } catch (error) {
+        throw Error(error.response.data.message);
+    }
+});
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
         loading: false,
         isAuthenticated: false,
-        user: '',
+        user: null,
         error: null,
         isUpdated: false,
-        message: null
+        message: null,
+        isInitiated: false
     },
     reducers: {
         clearError: (state) => {
@@ -108,6 +128,7 @@ const userSlice = createSlice({
         });
         builder.addCase(registerUser.fulfilled, (state, action) => {
             state.loading = false;
+            state.message = 'User registered successfully. Please login.';
         });
         builder.addCase(registerUser.rejected, (state, action) => {
             state.loading = false;
@@ -115,15 +136,15 @@ const userSlice = createSlice({
         });
         builder.addCase(loadUser.pending, (state) => {
             state.loading = true;
+            state.isInitiated = true;
         });
         builder.addCase(loadUser.fulfilled, (state, action) => {
-            state.loading = false;
             state.isAuthenticated = true;
+            state.loading = false;
             state.user = {...action.payload.user};
         });
         builder.addCase(loadUser.rejected, (state) => {
             state.loading = false;
-            state.user = null;
         });
         builder.addCase(logOutUser.pending, (state) => {
             state.loading = true;
@@ -139,6 +160,7 @@ const userSlice = createSlice({
         });
         builder.addCase(updatePassword.pending, (state) => {
             state.loading = true;
+            state.isUpdated = false;
         });
         builder.addCase(updatePassword.fulfilled, (state) => {
             state.loading = false;
@@ -164,6 +186,7 @@ const userSlice = createSlice({
         });
         builder.addCase(forgotPassword.pending, (state) => {
             state.loading = true;
+            state.isUpdated = false;
         });
         builder.addCase(forgotPassword.fulfilled, (state, action) => {
             state.loading = false;
@@ -181,6 +204,28 @@ const userSlice = createSlice({
             state.message = action.payload.message;
         });
         builder.addCase(resetPassword.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        builder.addCase(updateUserAdmin.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(updateUserAdmin.fulfilled, (state, action) => {
+            state.loading = false;
+            state.message = 'User updated successfully';
+        });
+        builder.addCase(updateUserAdmin.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+        builder.addCase(deleteUser.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(deleteUser.fulfilled, (state) => {
+            state.loading = false;
+            state.message = 'User deleted successfully';
+        });
+        builder.addCase(deleteUser.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
         });

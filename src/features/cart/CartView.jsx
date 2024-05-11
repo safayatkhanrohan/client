@@ -22,7 +22,7 @@ const CartView = () => {
         }
     }
   return (
-    <>
+    <div className="container container-fluid">
       <MetaData title={"Your Cart"} />
       {cart.length === 0 ? (
         <h2 className="mt-5">Your Cart is Empty</h2>
@@ -110,7 +110,7 @@ const CartView = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

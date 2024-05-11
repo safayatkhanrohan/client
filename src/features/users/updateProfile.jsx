@@ -1,39 +1,44 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProfile } from "./userSlice";
 import MetaData from "../../components/layout/MetaData";
 const UpdateProfile = () => {
-    const {user} = useSelector(state => state.user);
-    const navigate = useNavigate()
-    const dispatch = useDispatch();
-    const [tempUser, setUser] = useState({ name: "", email: "", password: "", avatar: ''});
-    const { name, email, avatar } = tempUser;
-    const [avatarPreview, setAvatarPreview] = useState(user.avatar.url);
-    
-    const submitHandler = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        (name !== '') && formData.set("name", name);
-        (email !== '') && formData.set("email", email);
-        (avatar !== '') && formData.set("avatar", avatar);
-        dispatch(updateProfile(formData));
-        navigate('/');
-    };
+  const { user } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [tempUser, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    avatar: "",
+  });
+  const { name, email, avatar } = tempUser;
+  const [avatarPreview, setAvatarPreview] = useState(user.avatar.url);
 
-    const avatarHandler = (e) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            if(reader.readyState === 2) {
-                setUser({...tempUser, avatar: reader.result});
-                setAvatarPreview(reader.result);
-            }
-        }
-        reader.readAsDataURL(e.target.files[0]);
-    }
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    name !== "" && formData.set("name", name);
+    email !== "" && formData.set("email", email);
+    avatar !== "" && formData.set("avatar", avatar);
+    dispatch(updateProfile(formData));
+    navigate("/");
+  };
+
+  const avatarHandler = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setUser({ ...tempUser, avatar: reader.result });
+        setAvatarPreview(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
 
   return (
-    <>
+    <div className="container container-fluid">
       <MetaData title={"Update Profile"} />
       <div className="row wrapper">
         <div className="col-10 col-lg-5">
@@ -60,36 +65,34 @@ const UpdateProfile = () => {
                 className="form-control"
                 name="email"
                 value={email}
-                onChange={(e) => setUser({ ...tempUser, email: e.target.value })}
+                onChange={(e) =>
+                  setUser({ ...tempUser, email: e.target.value })
+                }
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="avatar_upload">Avatar</label>
-              <div className="d-flex align-items-center">
-                <div>
-                  <figure className="avatar mr-3 item-rtl">
-                    <img
-                      src={avatarPreview}
-                      className="rounded-circle"
-                      alt="Avatar Preview"
-                    />
-                  </figure>
-                </div>
-                <div className="custom-file">
-                  <input
-                    type="file"
-                    name="avatar"
-                    className="custom-file-input"
-                    id="customFile"
-                    onChange={avatarHandler}
-                  />
-                  <label className="custom-file-label" htmlFor="customFile">
-                    Choose Avatar
-                  </label>
-                </div>
-              </div>
-            </div>
+            <div className="mb-3">
+  <label htmlFor="avatar_upload" className="form-label mt-2">Avatar</label>
+  <div className="d-flex align-items-center">
+    <div>
+      <figure className="avatar me-3">
+        <img src={avatarPreview} className="rounded-circle" alt="Avatar Preview" />
+      </figure>
+    </div>
+    <div className="col">
+      <div className="input-group">
+        <input
+          type="file"
+          name="avatar"
+          className="form-control"
+          id="avatar_upload"
+          onChange={avatarHandler}
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
 
             <button
               type="submit"
@@ -101,8 +104,8 @@ const UpdateProfile = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default UpdateProfile;

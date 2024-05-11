@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "react-js-pagination";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
@@ -52,12 +52,12 @@ function Home() {
   }
   return (
     <>
+      <MetaData title={"Buy Best Products Online"} />
       {loading ? (
         <Loader />
       ) : (
         products.products && (
           <>
-            <MetaData title={"Buy Best Products Online"} />
             <div className="container container-fluid">
               <h1 id="products_heading">Latest Products</h1>
               <section id="products" className="container mt-5">

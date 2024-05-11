@@ -45,11 +45,10 @@ function Header() {
             </button>
 
             <ul className="dropdown-menu">
-              {user.isAdmin ? (
+              {user.isAdmin && (
                 <li><Link to='/dashboard' className="dropdown-item">Dashboard</Link></li>
-              ): (
-                <li><Link to='/order/me' className="dropdown-item">Order</Link></li>
               )}
+                <li><Link to='/orders/me' className="dropdown-item">Order</Link></li>
                 <li><Link to='/me' className="dropdown-item">Profile</Link></li>
                 <li><Link to='/' className="dropdown-item text-danger" onClick={handleLogOut}>Logout</Link></li>
             </ul>

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+
 export const addTocart = createAsyncThunk('cart/addTocart', async ({id, quantity}) => {
     const {data: {product}} = await axios.get(`product/${id}`);
     return {
@@ -15,7 +16,8 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         cart: localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [],
-        shippingInfo: localStorage.getItem('shippingInfo') ? JSON.parse(localStorage.getItem('shippingInfo')) : {}
+        shippingInfo: localStorage.getItem('shippingInfo') ? JSON.parse(localStorage.getItem('shippingInfo')) : {},
+        success: false
     },
     reducers: {
         removeItemFromCart: (state, action) => {
@@ -25,6 +27,9 @@ const cartSlice = createSlice({
         saveShippingInfo: (state, action) => {
             state.shippingInfo = action.payload;
             localStorage.setItem('shippingInfo', JSON.stringify(state.shippingInfo));
+        },
+        resetSuccess: (state) => {
+            state.success = false;
         }
     },
     extraReducers: (builder) => {
@@ -37,10 +42,11 @@ const cartSlice = createSlice({
                 state.cart = [...state.cart, item];
             }
             localStorage.setItem('cart', JSON.stringify(state.cart));
+            state.success = true;
         });
     }
     
 });
-export const { removeItemFromCart, saveShippingInfo } = cartSlice.actions;
+export const { removeItemFromCart, saveShippingInfo, resetSuccess } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -18,7 +18,7 @@ const ShipingInfo = () => {
         navigate('/order/confirm');
     }
     return (
-        <>
+        <div className="container container-fluid">
             <MetaData title={'Shipping Info'} />
             <CheckoutSteps shipping />
             <div className="row wrapper">
@@ -99,7 +99,7 @@ const ShipingInfo = () => {
                 </form>
             </div>
         </div>
-        </>
+        </div>
     );
 }
 

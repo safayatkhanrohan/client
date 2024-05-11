@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearError, registerUser } from "./userSlice";
-import toast from 'react-hot-toast'
+import { clearError, clearMessage, registerUser } from "./userSlice";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const RegisterUser = () => {
-  const {loading, user, error} = useSelector((state) => state.user);
+  const { loading, message, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  
 
   const [avatarPreview, setAvatarPreview] = useState("/images/avatar.jpg");
-  const [tempUser, setUser] = useState({ name: "", email: "", password: "", avatar: ''});
+  const [tempUser, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    avatar: "",
+  });
   const { name, email, password, avatar } = tempUser;
   const dispatch = useDispatch();
 
@@ -29,12 +33,13 @@ const RegisterUser = () => {
       toast.error(error);
       dispatch(clearError());
     }
-    if (user) {
+    if (message) {
       toast.success("User registered successfully. Please login.");
+      dispatch(clearMessage());
       navigate("/login");
     }
-  }, [error, loading]);
-  
+  }, [error, message]);
+
   const setAvatar = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -44,12 +49,16 @@ const RegisterUser = () => {
       }
     };
     reader.readAsDataURL(e.target.files[0]);
-  }
+  };
   return (
-    <>
+    <div className="container container-fluid">
       <div className="row wrapper">
         <div className="col-10 col-lg-5">
-          <form className="shadow-lg" encType="multipart/form-data" onSubmit={handleSubmit}>
+          <form
+            className="shadow-lg"
+            encType="multipart/form-data"
+            onSubmit={handleSubmit}
+          >
             <h1 className="mb-3">Register</h1>
 
             <div className="form-group">
@@ -70,7 +79,9 @@ const RegisterUser = () => {
                 id="email_field"
                 className="form-control"
                 value={email}
-                onChange={(e) => setUser({ ...tempUser, email: e.target.value })}
+                onChange={(e) =>
+                  setUser({ ...tempUser, email: e.target.value })
+                }
               />
             </div>
 
@@ -81,30 +92,35 @@ const RegisterUser = () => {
                 id="password_field"
                 className="form-control"
                 value={password}
-                onChange={ (e) => setUser({...tempUser, password: e.target.value}) }
+                onChange={(e) =>
+                  setUser({ ...tempUser, password: e.target.value })
+                }
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="avatar_upload">Avatar</label>
+            <div className="form-group mt-2">
+              <label className="custom-file-label" htmlFor="customFile">
+                Choose Avatar
+              </label>
               <div className="d-flex align-items-center">
                 <div>
                   <figure className="avatar mr-3 item-rtl">
-                    <img src={avatarPreview} className="rounded-circle" alt="image" />
+                    <img
+                      src={avatarPreview}
+                      className="rounded-circle"
+                      alt="image"
+                    />
                   </figure>
                 </div>
-                <div className="custom-file">
+                <div className="custom-file ps-3">
                   <input
                     type="file"
                     name="avatar"
-                    className="custom-file-input"
+                    className="form-control"
                     id="customFile"
                     accept="images/*"
                     onChange={setAvatar}
                   />
-                  <label className="custom-file-label" htmlFor="customFile">
-                    Choose Avatar
-                  </label>
                 </div>
               </div>
             </div>
@@ -120,7 +136,7 @@ const RegisterUser = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

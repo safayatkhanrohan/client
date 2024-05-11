@@ -30,7 +30,8 @@ const LoginUser = () => {
     }
     
   return (
-    <>
+
+    <div className="container container-fluid">
       <MetaData title={"Login"} />
       <div className="row wrapper">
         <div className="col-10 col-lg-5">
@@ -72,7 +73,7 @@ const LoginUser = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

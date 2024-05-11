@@ -22,30 +22,37 @@ import CartView from './features/cart/CartView'
 import ShipingInfo from './features/cart/ShipingInfo'
 import ConfirmOrder from './features/cart/ConfirmOrder'
 import Payment from './features/cart/Payment'
+import OrderSuccess from './components/OrderSuccess'
+import ListOrder from './features/order/ListOrder'
+import OrderDetailsView from './features/orderDetails/OrderDetailsView'
+import Dashboard from './components/admin/Dashboard'
+import AdminRoute from './components/route/AdminRoute'
+import ProductList from './components/admin/ProductList'
+import AllUserList from './features/allUser/AllUserView'
+import UpdateUser from './components/admin/UpdateUser'
+import NewProductView from './features/newProduct/NewProductView'
+import UpdateProductView from './features/products/UpdateProductView'
+import AllOrderView from './features/order/AllOrdersView'
+import ProcessOrder from './features/order/ProcessOrder'
+import ProductReview from './features/reviews/ProductReview'
 
 axios.defaults.baseURL = 'http://localhost:9000/api/v1'
 axios.defaults.withCredentials = true;
 
 function App() {
 
-  const {user, isAuthenticated, isUpdated} = useSelector(state => state.user);
-  const [stripeApiKey, setStripeApiKey] = useState('');
+  const user = useSelector(state => state.user);
+  const {isUpdated, isAuthenticated} = user;
 
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(loadUser())
-    function loadStripe() {
-      if (isAuthenticated) {
-        axios.get('/stripeapi').then(res => setStripeApiKey(res.data.stripeApiKey));
-      }
-    }
-    loadStripe();
-  }, [isAuthenticated, isUpdated]);
+    dispatch(loadUser());
+  }, [isUpdated, isAuthenticated]);
+
 
   return (
     <>
       <Header />
-        <div className="container container-fluid">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search/:keyword" element={<Home />} />
@@ -55,17 +62,28 @@ function App() {
           <Route path="/me" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/me/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} />
           <Route path="/me/password/update" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
-          <Route path="/password/forgot" element={<ProtectedRoute><ForgotPassword /></ProtectedRoute>} />
-          <Route path="/password/reset/:token" element={<ProtectedRoute><NewPassword /></ProtectedRoute>} />
+          <Route path="/password/forgot" element={<ForgotPassword />} />
+          <Route path="/password/reset/:token" element={<NewPassword />} />
           <Route path="/cart" element={<CartView />} />
           <Route path="/shiping" element={<ProtectedRoute><ShipingInfo /></ProtectedRoute>} />
           <Route path="/order/confirm" element={<ProtectedRoute><ConfirmOrder /></ProtectedRoute>} />
           <Route path="/payment" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
+          <Route path="/success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
+          <Route path="/orders/me" element={<ProtectedRoute><ListOrder /></ProtectedRoute>} />
+          <Route path="/order/:id" element={<ProtectedRoute><OrderDetailsView /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>} />
+          <Route path="/admin/products" element={<AdminRoute><ProductList /></AdminRoute>} />
+          <Route path="/admin/users" element={<AdminRoute><AllUserList /></AdminRoute>} />
+          <Route path="/admin/user/:id" element={<AdminRoute><UpdateUser /></AdminRoute>} />
+          <Route path="/admin/product/new" element={<AdminRoute><NewProductView /></AdminRoute>} />
+          <Route path="/admin/product/:id" element={<AdminRoute><UpdateProductView /></AdminRoute>} />
+          <Route path="/admin/orders" element={<AdminRoute><AllOrderView /></AdminRoute>} />
+          <Route path="/admin/order/:id" element={<AdminRoute><ProcessOrder /></AdminRoute>} />
+          <Route path="/admin/reviews" element={<AdminRoute><ProductReview /></AdminRoute>} />
 
         </Routes>
-        
         <Toaster position='bottom-center' toastOptions={{ duration: 3000 }} />
-      </div>
+      
       <Footer />
     </>
   )

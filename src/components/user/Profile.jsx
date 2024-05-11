@@ -6,7 +6,7 @@ import Loader from '../layout/Loader';
 const Profile = () => {
     const {user, loading} = useSelector(state => state.user);
   return (
-    <>
+    <div className="container container-fluid">
     {loading ? <Loader /> : (
         <>
         <h2 className='m-5 text-center'>My Profile</h2>
@@ -40,7 +40,7 @@ const Profile = () => {
         </div>
         </>
     )}
-    </>
+    </div>
   )
 }
 
